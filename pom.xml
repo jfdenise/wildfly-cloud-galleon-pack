@@ -143,6 +143,13 @@
             </plugin>
         </plugins>
     </build>
+    <developers>
+      <developer>
+        <id>jdenise</id>
+        <name>Jean-Francois Denise</name>
+        <organization>Red Hat</organization>
+      </developer>
+    </developers>
     <profiles>
       <profile>
         <id>release</id>
