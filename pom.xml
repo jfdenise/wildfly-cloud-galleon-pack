@@ -192,6 +192,13 @@
             </plugin>
         </plugins>
     </build>
+    <developers>
+      <developer>
+        <id>jdenise</id>
+        <name>Jean-Francois Denise</name>
+        <organization>Red Hat</organization>
+      </developer>
+    </developers>
     <profiles>
       <!-- Temporarily override the jboss-parent jboss-release profile
       to add configuration related to Nexus 3 deployment. These

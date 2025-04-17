@@ -15,10 +15,15 @@ jobs:
         os: [ubuntu-latest]
         java: ['17']
     steps:
+      - uses: actions/checkout@v2
+        with:
+            path: wildfly-cloud
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
+          cache: 'maven'
+          distribution: 'temurin'
       - name: Update hosts - linux
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -26,15 +31,6 @@ jobs:
           sudo bash -c "echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4' > /etc/hosts"
           sudo bash -c "echo '::1         localhost localhost.localdomain localhost6 localhost6.localdomain6' >> /etc/hosts"
           sudo sysctl -w fs.file-max=2097152
-      - uses: actions/checkout@v2
-        with:
-            path: wildfly-cloud
-      - uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
       - uses: actions/checkout@v2
         with:
             repository: wildfly/wildfly-s2i
