@@ -25,9 +25,9 @@
     </parent>
     <artifactId>wildfly-cloud-galleon-pack</artifactId>
     <packaging>pom</packaging>
-    <name>WildFly Galleon feature-pack for Cloud</name>
+    <name>WildFly Galleon feature-pack for the Cloud</name>
   
-    <description>WildFly Galleon feature-pack for Cloud.</description>
+    <description>This feature-pack adjusts the WildFly layers to run on the cloud.</description>
     
     <dependencies>
          <dependency>
