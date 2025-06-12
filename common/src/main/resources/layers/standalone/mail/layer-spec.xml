@@ -1,5 +1,9 @@
 <?xml version="1.0" ?>
-<layer-spec xmlns="urn:jboss:galleon:layer-spec:1.0" name="mail">
+<layer-spec xmlns="urn:jboss:galleon:layer-spec:2.0" name="mail">
+    <props>
+      <prop name="org.wildfly.category" value="Cloud"/>
+      <prop name="org.wildfly.description" value="Support for Jakarta Mail, adjusted for the cloud."/>
+    </props>
     <!-- SMTP socket -->
     <feature spec="socket-binding-group">
         <param name="socket-binding-group" value="standard-sockets" />
