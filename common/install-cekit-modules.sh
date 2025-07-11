@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 # Install launch scripts and galleon common content.
-SCRIPT_DIR=$(pwd -P)/$(dirname $0)
+SCRIPT_DIR=$1
 tmp_dir="$SCRIPT_DIR/target/tmp"
 mkdir -p $tmp_dir
 resources_dir="$SCRIPT_DIR/target/resources"

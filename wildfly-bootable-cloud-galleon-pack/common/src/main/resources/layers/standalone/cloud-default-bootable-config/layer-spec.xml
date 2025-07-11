@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<layer-spec xmlns="urn:jboss:galleon:layer-spec:1.0" name="cloud-default-bootable-config">
+   <dependencies>
+        <!-- cloud server like -->
+        <layer name="core-management"/>
+        <layer name="web-server"/>
+        <layer name="datasources"/>
+        <layer name="management"/>
+        <layer name="jmx-remoting"/> 
+        <layer name="logging"/>
+        <layer name="request-controller"/>
+        <layer name="security-manager"/>
+        <layer name="jaxrs"/>
+        <layer name="bean-validation"/>
+        <layer name="cdi"/>
+        <layer name="ee-security"/>
+        <layer name="jms-activemq"/>
+        <layer name="resource-adapters"/>
+        <!-- end cloud server -->
+        <layer name="elytron-oidc-client"/>
+        <layer name="h2-driver"/>
+        <layer name="metrics"/>
+        <layer name="microprofile-fault-tolerance"/>
+        <layer name="microprofile-health"/>
+        <layer name="microprofile-jwt"/>
+        <layer name="microprofile-openapi"/>
+        <layer name="microprofile-rest-client"/>
+        <layer name="opentelemetry"/>
+        <layer name="microprofile-telemetry"/>
+        <layer name="web-clustering"/>
+    </dependencies>
+   
+    <!-- add jpa without infinispan cache -->
+    <feature-group name="jpa"/>
+
+    <!-- ejb http invoker -->
+    <feature-group name="application-http-basic"/>
+    <feature-group name="undertow-http-invoker"/>
+    
+    <!-- clustering -->
+    <feature-group name="os-jgroups"/>
+    <feature-group name="os-infinispan-dist-web"/>
+    <feature-group name="infinispan-dist-hibernate"/>
+    <feature-group name="os-infinispan-hibernate"/>
+
+    <!-- add applications security domain to undertow -->
+    <feature-group name="undertow-elytron-security"/>
+
+    <packages>
+        <!-- All modules are provisioned. Needed by this config that opens up to custom standalone.xml -->
+        <package name="modules.all"/>
+        <package name="bin.jdrtools"/>
+    </packages>
+</layer-spec>
+

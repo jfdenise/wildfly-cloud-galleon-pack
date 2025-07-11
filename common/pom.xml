@@ -40,6 +40,7 @@
                         <configuration>
                             <target>
                                 <exec executable="./install-cekit-modules.sh" failonerror="true">
+                                    <arg value="${project.basedir}"/>
                                     <env key="WILDFLY_CEKIT_TAG" value="${wildfly.cekit.modules.tag}"/>
                                     <env key="WILDFLY_CEKIT_FORK" value="${wildfly.cekit.modules.fork}"/>
                                 </exec>
