@@ -15,9 +15,13 @@ First, make sure you don't have pending changes in your main branch.
 ** mvn versions:set -DnewVersion=<new released version>
 ** mvn versions:commit
 * Commit the changes with message: `Release X.X.X.Final`
-* Deploy in nexus
-** `mvn clean deploy -DskipTests`
-* Create and push a Tag with the new release.
+* Deploy in nexus staging repository
+** `mvn -Pjboss-release -Pjboss-staging-deploy deploy -DskipTests`
+* Create a Tag with the new release.
+* Check that all is correct in https://repository.jboss.org/nexus/#browse/browse:wildfly-staging
+* Deploy to nexus release repository
+** `mvn -Pjboss-staging-move nxrm3:staging-move`
+* Push the tag previously created
 * Update to the next release
 ** Update pom.xml `wildfly.cekit.modules.tag` with `main` value.
 ** mvn versions:set -DnewVersion=<new X.X.X.Final-SNAPSHOT version>
