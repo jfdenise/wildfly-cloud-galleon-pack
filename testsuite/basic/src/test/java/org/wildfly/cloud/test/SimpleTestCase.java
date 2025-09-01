@@ -17,12 +17,17 @@
 package org.wildfly.cloud.test;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import javax.inject.Inject;
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.wildfly.core.testrunner.ManagementClient;
 import org.wildfly.core.testrunner.WildflyTestRunner;
@@ -41,5 +46,25 @@ public class SimpleTestCase {
         operation.get("address").set("/subsystem=jaxrs");
         ModelNode result = client.execute(operation);
         assertEquals(result.asString(), "success", result.get("outcome").asString());
+        // Check exclusions.
+        String excludedPaths = System.getProperty("test.excluded.paths");
+        if (excludedPaths != null) {
+            System.out.println("Some paths are excluded " + excludedPaths);
+            Path install = Paths.get(System.getProperty("jboss.home"));
+            String[] paths = excludedPaths.split(",");
+            for (String p : paths) {
+                assertFalse(p, Files.exists(install.resolve(p)));
+            }
+        } else {
+            String expectedPaths = System.getProperty("test.expected.paths");
+            if (expectedPaths != null) {
+                System.out.println("Some paths are expected " + expectedPaths);
+                Path install = Paths.get(System.getProperty("jboss.home"));
+                String[] paths = expectedPaths.split(",");
+                for (String p : paths) {
+                    assertTrue(p, Files.exists(install.resolve(p)));
+                }
+            }
+        }
     }
 }
