@@ -1,5 +1,9 @@
 <?xml version="1.0" ?>
-<layer-spec xmlns="urn:jboss:galleon:layer-spec:1.0" name="cloud-default-config">
+<layer-spec xmlns="urn:jboss:galleon:layer-spec:2.0" name="cloud-default-config">
+  <props>
+    <prop name="org.wildfly.category" value="Cloud"/>
+    <prop name="org.wildfly.description" value="A default configuration for the cloud. Note that all JBoss Modules modules are provisioned."/>
+  </props>
    <dependencies>
         <layer name="batch-jberet"/>
         <!-- cloud server like -->
