@@ -43,9 +43,26 @@ jobs:
            sudo mv s2i /usr/bin
            which s2i
            s2i version
+      - name: Build cloud FP and docker image
+        run: |
+          mvn clean install -DskipTests
+          cloudVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "CLOUD_FP_VERSION=${cloudVersion}" >> $GITHUB_ENV
+          mkdir -p custom-cloud-image
+          mkdir -p custom-cloud-image/docker/repository/org/wildfly/cloud/wildfly-cloud-galleon-pack/$cloudVersion
+          mkdir -p custom-cloud-image/docker/repository/org/wildfly/cloud/wildfly-bootable-cloud-configurator/$cloudVersion
+          cp wildfly-cloud-galleon-pack/target/wildfly-cloud-galleon-pack-$cloudVersion.zip custom-cloud-image/docker/repository/org/wildfly/cloud/wildfly-cloud-galleon-pack/$cloudVersion
+          cp wildfly-bootable-cloud-configurator/target/wildfly-bootable-cloud-configurator-$cloudVersion.jar custom-cloud-image/docker/repository/org/wildfly/cloud/wildfly-bootable-cloud-configurator/$cloudVersion
+          docker_file=custom-cloud-image/docker/Dockerfile
+            cat <<EOF > $docker_file
+             FROM registry.access.redhat.com/ubi9/openjdk-${{ matrix.java }}:latest
+             RUN mkdir -p /tmp/artifacts/m2
+             COPY --chown=default:root repository /tmp/artifacts/m2
+          EOF
+          docker build -t wildfly/openjdk-s2i:dev-$cloudVersion ./custom-cloud-image/docker
       - name: Test OpenJDK S2I to build bootable JAR
         run: |
-          s2i build --env MAVEN_ARGS_APPEND="-Dwildfly.bootable.jar=true" ./s2i-tests/test-apps/helloworld registry.access.redhat.com/ubi9/openjdk-${{ matrix.java }}:latest wildfly/helloworld-bootable-app
+          s2i build --env MAVEN_ARGS_APPEND="-Dwildfly.bootable.jar=true -Dversion.wildfly.cloud.galleon.pack=${{ env.CLOUD_FP_VERSION }}" ./s2i-tests/test-apps/helloworld wildfly/openjdk-s2i:dev-${{ env.CLOUD_FP_VERSION }} wildfly/helloworld-bootable-app
           cid=$(docker run --detach -p8080:8080 wildfly/helloworld-bootable-app)
           echo "Started container with ID $cid"
           max_attempts=30
