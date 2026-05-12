@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -25,7 +26,7 @@ import org.w3c.dom.NodeList;
 public class JGroupsUtil {
 
     private static final String JGROUPS_CLUSTER_PASSWORD = "${env.JGROUPS_CLUSTER_PASSWORD}";
-
+    private static final Pattern AUTH_PROTOCOL_PATTERN = Pattern.compile(".*NAKACK.*");
     static List<String> getProtocolCommands(Path configFile, boolean authProtocol) throws Exception {
         List<String> ret = new ArrayList<>();
         XPathFactory factory = XPathFactory.newInstance();
@@ -60,7 +61,7 @@ public class JGroupsUtil {
                         for (int k = 0; k < protocols.getLength(); k++) {
                             Element protocol = (Element) protocols.item(k);
                             String type = protocol.getAttribute("type");
-                            if ("pbcast.GMS".equals(type)) {
+                            if (AUTH_PROTOCOL_PATTERN.matcher(type).matches()) {
                                 ret.add("batch");
                                 ret.add("/subsystem=jgroups/stack=" + currentStack + "/protocol=AUTH:add(add-index=" + currentIndex + ")");
                                 ret.add("/subsystem=jgroups/stack=" + currentStack + "/protocol=AUTH/token=digest:add(algorithm=SHA-512, shared-secret-reference={clear-text=" + JGROUPS_CLUSTER_PASSWORD + "})");
